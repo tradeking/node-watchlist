@@ -1,0 +1,251 @@
+@import url(http://fonts.googleapis.com/css?family=Metrophobic&v2);
+
+body {
+  background: #2a2a2a;
+  color: #434343;
+  font-family: Helvetica, Verdana, Arial;
+  margin: 0px;
+  padding: 0px;
+}
+
+#container {
+  margin: 45px auto 0;
+  width: 1150px;
+}
+
+.quote {
+  position:relative;
+  width: 370px;
+  height:180px;
+  margin:5px;
+  float: left;
+  -webkit-box-shadow: 0px 0px 2px rgba(0,0,0,.25);
+  box-shadow: 0px 0px 2px rgba(0,0,0,.25);
+  overflow:hidden;
+  background-image: -webkit-gradient(
+      linear,
+      left bottom,
+      left top,
+      color-stop(0.08, rgb(175,175,175)),
+      color-stop(0.54, rgb(245,245,245))
+  );
+  background-image: -moz-linear-gradient(
+      center bottom,
+      rgb(175,175,175) 8%,
+      rgb(245,245,245) 54%
+  );
+}
+
+.quote .details, .quote .form {
+  position:absolute;
+  height:175px;
+  width: 350px;
+  padding:10px;
+}
+
+.quote .details {
+  top:0px;
+  background:rgba(240,240,240,.5);
+}
+.quote .form {
+  top:190px;
+  background:rgba(150,150,150,.5);
+}
+.quote .function {
+  float:right;
+  text-decoration:none;
+  font-size:10px;
+  color:#fff;
+  border-radius:15px;
+  margin:0 4px;
+  padding:0px 1px 1px 0px;
+  width:16px;
+  height:16px;
+  font-weight:bold;
+  background-color:#333;
+}
+.tweets {
+    overflow:auto;
+    height:140px;
+    margin-right:7px;
+}
+
+h3 {
+  text-shadow:0px 1px 1px #fff;
+}
+h3, h5 {
+  margin: 0px;
+}
+
+table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+td {
+  overflow:hidden;
+  white-space:nowrap;
+  display: table-cell;
+}
+
+.p1 {
+  font-size: 15px;
+}
+
+.p2 {
+  font-size: 14px;
+}
+
+.p3,.p4 {
+  font-size: 12px;
+}
+
+.right {
+  text-align: right;
+}
+
+.sep {
+  padding-right: 15px;
+}
+
+#request #symbol {
+  padding: 4px 4px 3px;
+  font-size: 14px;
+}
+
+#request #submit {
+  padding: 5px;
+  font-size: 20px;
+}
+
+td.up {
+  color: #00bc00;
+}
+td.down {
+  color: #bc0000;
+}
+
+#trade_form {
+  display: none;
+}
+
+#toolbar {
+  width:1150px;
+  margin:0 auto;
+  position: fixed;
+  top: 0px;
+  width: 100%;
+  background: #333333;
+  height: 32px;
+  text-align: center;
+  color: #EFEFEF;
+  font-size: 14px;
+  font-family: 'Metrophobic', sans-serif;
+}
+
+#toolbar input {
+  font-family: 'Metrophobic', sans-serif;
+  text-align:center;
+  position:relative;
+  top:1px;
+  font-size:15px;
+  text-transform:uppercase;
+  outline:none;
+  padding:2px;
+  margin: 0 32px;
+}
+
+#toolbar .indices span {
+  font-weight: bold;
+}
+
+#toolbar .indices .value {
+  padding: 0 12px;
+  font-weight: normal;
+}
+
+#toolbar #VIX .value{
+  padding-right: 0px;
+}
+
+.tweet img {
+  float: left;
+  margin: 0 6px 2px 0;
+  border:1px solid #aaa;
+}
+
+.tweet strong {
+  display: block;
+  font-size: 14px;
+}
+
+.tweet span.twitter_text {
+  display: block;
+  font-size: 12px;
+}
+
+.tweet span.timeago {
+  display: block;
+  font-size: 11px;
+  font-weight: bold;
+  float: right;
+}
+
+#tweetwrapper {
+    position: fixed;
+/*    position: relative;*/
+  right: -360px;
+  width: 360px;
+  height: 80%;
+  padding-top: 5px;
+}
+
+#alltweets {
+  padding:10px;
+  -webkit-box-shadow: 0px 0px 2px rgba(0,0,0,.25);
+  box-shadow: 0px 0px 2px rgba(0,0,0,.25);
+  background:rgba(240,240,240,.95);
+  overflow: hidden;
+  height: 100%;
+  border-left: 1px solid #cccccc;
+}
+
+#alltweets .tweets {
+  height: 100%;
+}
+
+.tweet img {
+    width:48px;
+    height:48px;
+}
+
+#tweetwrapper #handle {
+  width: 18px;
+  height: 25%;
+  margin: auto 0;
+  position: absolute;
+  top: 40%;
+  left: -19px;
+  cursor: pointer;
+  background-image: -webkit-gradient(
+      linear,
+      left bottom,
+      left top,
+      color-stop(0.08, rgb(175,175,175)),
+      color-stop(0.54, rgb(245,245,245))
+  );
+  background-image: -moz-linear-gradient(
+      center bottom,
+      rgb(175,175,175) 8%,
+      rgb(245,245,245) 54%
+  );
+  border: 1px solid #cccccc;
+  border-right: none;
+  border-radius: 5px 0 0 5px;
+}
+
+span.highlight {
+  color:white;
+  display:inline;
+  background:#0073C3;
+}

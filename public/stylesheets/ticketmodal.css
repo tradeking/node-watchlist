@@ -1,0 +1,32 @@
+#facebox .content {
+  width: 500px;
+}
+
+#facebox .content h2 {
+  text-align: left;
+  margin:0 0 20px 0;
+}
+
+fieldset {
+  margin: 10px 0;
+  border: 1px solid #cccccc;
+}
+
+fieldset label {
+  font-size: 13px;
+  font-weight: bold;
+}
+
+fieldset input[type=text] {
+  width: 75px;
+}
+
+#execute {
+  width: 100%;
+  padding: 5px 0;
+  background: #343434;
+  color: white;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+}

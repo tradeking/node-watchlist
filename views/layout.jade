@@ -1,0 +1,14 @@
+!!! 5
+html(lang="en")
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/facebox.css')
+    script(src='/resources/libs/jquery.js')
+    script(src='/resources/libs/facebox.js')
+    script(src='/socket.io/socket.io.js')
+    script
+      $.facebox.settings.closeImage = '/images/facebox/closelabel.png'
+      $.facebox.settings.loadingImage = '/images/facebox/loading.gif'
+
+  body!= body

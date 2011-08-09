@@ -1,0 +1,101 @@
+script(src='/resources/libs/jquery.timeago.js')
+script(src='/javascripts/watchlist.js')
+script(src='/javascripts/main.js')
+script(src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js')
+script(src='/javascripts/mousewheel.js')
+script(src='/javascripts/mousewheelintent.js')
+script(src='/javascripts/jscrollpane.js')
+link(rel="stylesheet",href="/stylesheets/jscrollpane.css", type="text/css", media="all")
+link(rel="stylesheet",href="/stylesheets/ticketmodal.css", type="text/css", media="all")
+link(rel="stylesheet",href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/ui-darkness/jquery-ui.css", type="text/css", media="all")
+
+script
+  $(document).ready(function($) {
+    $('a[rel*=facebox]').facebox()
+
+    $('.trade_link').live('click',function() {
+      $.facebox({ div: '#trade_form' });
+      $('input#trade_symbol').val($(this).parents('.quote').attr('symbol'));
+      return false;
+    });
+
+    $('input#execute').live('click', function() {
+      socket.emit('execute_trade',$('#facebox form').serializeArray());
+
+      $('#facebox .content form').remove();
+      $('#facebox .content').css('text-align', 'center').append('<p><img id="loading" src="/images/facebox/loading.gif" border="0"/></p>')
+      return false;
+    });
+
+  });
+
+#container
+
+#toolbar
+  span.indices.left
+    span#DJI DJI
+      span.value
+    span#SPX SPX
+      span.value
+    span#VIX VIX
+      span.value
+  input(name="add-symbol", id="add-symbol", placeholder="Add a Symbol")
+  span.indices.right
+    span#COMP COMP
+      span.value
+    span#RUT RUT
+      span.value
+    span#TNX TNX
+      span.value
+
+div#trade_form
+  h2 Trade Ticket
+  form
+    fieldset
+      table
+        tr
+          td
+            label Symbol
+          td
+            label Quantity
+          td
+            label Action
+        tr
+          td
+            input(type='text', name='symbol', id='trade_symbol')
+          td
+            input(type='text', name='quantity', id='quantity')
+          td
+            select
+              option(value="buy") Buy
+              option(value="sell") Sell
+              option(value="sellshort") Sell Short
+              option(value="buycover") Buy to Cover
+        tr
+          td(colspan="3")
+            hr
+        tr
+          td
+            label Type
+          td
+            label Term
+        tr
+          td
+            select
+              option(value="market") Market
+              option(value="limit") Limit
+              option(value="stop") Stop
+              option(value="stoplimit") Stop Limit
+              option(value="marketclose") Market on Close
+          td
+            select
+              option(value="day") Day Order
+              option(value="gtc") GTC
+          td
+            input#execute(type='submit')
+
+#tweetwrapper.closed
+  #handle
+  #alltweets
+    .tweets
+

@@ -1,6 +1,6 @@
 {
-    "name": "Watchlist-Mashup"
-  , "version": "0.0.1"
+    "name": "node-watchlist"
+  , "version": "1.0.0"
   , "private": true
   , "dependencies": {
       "express": "2.4.3"

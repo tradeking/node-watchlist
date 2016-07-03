@@ -1,3 +1,18 @@
+//extends ./layout.jade
+docttype html
+html(lang="en")
+
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/facebox.css')
+    script(src='/resources/libs/jquery.js')
+    script(src='/resources/libs/facebox.js')
+    script(src='/socket.io/socket.io.js')
+    script.
+      $.facebox.settings.closeImage = '/images/facebox/closelabel.png'
+      $.facebox.settings.loadingImage = '/images/facebox/loading.gif'
+
 script(src='/resources/libs/jquery.timeago.js')
 script(src='/javascripts/watchlist.js')
 script(src='/javascripts/main.js')
@@ -9,7 +24,7 @@ link(rel="stylesheet",href="/stylesheets/jscrollpane.css", type="text/css", medi
 link(rel="stylesheet",href="/stylesheets/ticketmodal.css", type="text/css", media="all")
 link(rel="stylesheet",href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/ui-darkness/jquery-ui.css", type="text/css", media="all")
 
-script
+script.
   $(document).ready(function($) {
     $('a[rel*=facebox]').facebox()
 

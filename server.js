@@ -1,24 +1,27 @@
 var express = require('express');
+var bodyParser = require('body-parser');
+var path = require('path');
 global.oauth = require('oauth');
 var sys = require('sys');
 global.twitter = require('twitter');
-var app = module.exports = express.createServer();
+
+var app = express();
 var io = require('socket.io');
 global.packets = require('./packets').packets;
 
 // Configuration!
 global.tradeking = {
   api_url: "https://api.tradeking.com/v1",
-  consumer_key: "",
-  consumer_secret: "",
-  access_token: "",
-  access_secret: ""
+  consumer_key: "5zMLBrv3nRJm61lAFcXZJv2NNOuFTHLTB3hhf8QQ",
+  consumer_secret: "gDluLXVZ4cN0jOudeMxNSWGLSd9FSvhI53gL6Ibl",
+  access_token: "pFvXe5hjhx9ztKxB1GFA7DTzwMUlt1X4cZEjgf3x",
+  access_secret: "CgZV91GaG5eJuvhOv3QtnMOwYZrMdWTmGblv0OM1"
 }
 global.twitter_user = {
-  consumer_key : '',
-  consumer_secret : '',
-  access_token_key : '',
-  access_token_secret : ''
+  consumer_key : 'xcPMOamFGQFsLaJzP8ciV91kw',
+  consumer_secret : '0YtW5uHobIGSiTvdxNT0ZXgt2aPDGeKgFm95dEZAXcXr9usEq3',
+  access_token_key : '248725424-0ESUgzmLcIMu27njk9yQdJIgPnALOhExyOKHgtic',
+  access_token_secret : 'yRHx8MSNCOxNFvWw8DYqSaHGkgvu9xLmOstct3EjGBQkB'
 }
 
 global.tradeking_consumer = new oauth.OAuth(
@@ -42,22 +45,14 @@ global.twitter_consumer = new oauth.OAuth(
 global.twitter_client = new twitter(twitter_user);
 
 // Configuration
-app.configure(function(){
-  app.set('views', __dirname + '/views');
+//app.configure(function(){
+  app.set('views', path.join(__dirname, 'views'));
   app.set('view engine', 'jade');
-  app.use(express.bodyParser());
-  app.use(express.methodOverride());
-  app.use(app.router);
-  app.use(express.static(__dirname + '/public'));
-});
-
-app.configure('development', function(){
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-});
-
-app.configure('production', function(){
-  app.use(express.errorHandler());
-});
+  app.use(bodyParser.json());
+  app.use(require('method-override')());
+  app.use(express.Router(app));
+  app.use(express.static(path.join(__dirname, 'public')));
+//});
 
 // Routes
 app.get('/', function(req, res) {
@@ -104,51 +99,72 @@ app.get('/tradeking/callback', function(req, res){
 
 // Twitter OAuth
 app.get('/twitter/connect', function(req, res){
-  twitter_consumer.getOAuthRequestToken(function(error, oauthToken, oauthTokenSecret, results){
-    if (error) {
-      res.send("Error getting OAuth request token : " + sys.inspect(error), 500);
-    } else {
-      twitter_user.oauth_request_token = oauthToken;
-      twitter_user.oauth_request_token_secret = oauthTokenSecret;
-      redirect(res, "https://twitter.com/oauth/authorize?oauth_token="+twitter_user.oauth_request_token);
-    }
-  });
+twitter_consumer.getOAuthRequestToken(function(error, oauthToken, oauthTokenSecret, results){
+  if (error) {
+    res.send("Error getting OAuth request token : " + sys.inspect(error), 500);
+  } else {
+    twitter_user.oauth_request_token = oauthToken;
+    twitter_user.oauth_request_token_secret = oauthTokenSecret;
+    redirect(res, "https://twitter.com/oauth/authorize?oauth_token="+twitter_user.oauth_request_token);
+  }
+});
 });
 
 app.get('/twitter/callback', function(req, res){
-  console.log('Twitter Request Token: ' + twitter_user.oauth_request_token);
-  console.log('Twitter Request Token Secret: ' + twitter_user.oauth_request_token_secret);
-  console.log('Twitter Request Token: ' + req.query.oauth_verifier);
-  twitter_consumer.getOAuthAccessToken(twitter_user.oauth_request_token, twitter_user.oauth_request_token_secret, req.query.oauth_verifier, function(error, oauthAccessToken, oauthAccessTokenSecret, results) {
-    if (error) {
-      res.send("Error getting OAuth access token : " + sys.inspect(error) + "["+oauthAccessToken+"]"+ "["+oauthAccessTokenSecret+"]"+ "["+sys.inspect(results)+"]", 500);
-    } else {
-      // delete request tokens
-      delete(twitter_user.oauth_request_token);
-      delete(twitter_user.oauth_request_token_secret);
+ console.log('Twitter Request Token: ' + twitter_user.oauth_request_token);
+console.log('Twitter Request Token Secret: ' + twitter_user.oauth_request_token_secret);
+console.log('Twitter Request Token: ' + req.query.oauth_verifier);
+twitter_consumer.getOAuthAccessToken(twitter_user.oauth_request_token, twitter_user.oauth_request_token_secret, req.query.oauth_verifier, function(error, oauthAccessToken, oauthAccessTokenSecret, results) {
+  if (error) {
+    res.send("Error getting OAuth access token : " + sys.inspect(error) + "["+oauthAccessToken+"]"+ "["+oauthAccessTokenSecret+"]"+ "["+sys.inspect(results)+"]", 500);
+  } else {
+    // delete request tokens
+    delete(twitter_user.oauth_request_token);
+    delete(twitter_user.oauth_request_token_secret);
 
-      // set the access tokens
-      twitter_user.access_token_key = oauthAccessToken;
-      twitter_user.access_token_secret = oauthAccessTokenSecret;
+    // set the access tokens
+    twitter_user.access_token_key = oauthAccessToken;
+    twitter_user.access_token_secret = oauthAccessTokenSecret;
 
-      console.log('Twitter Access Token: ' + twitter_user.access_token_key);
-      console.log('Twitter Access Token Secret: ' + twitter_user.access_token_secret);
+    console.log('Twitter Access Token: ' + twitter_user.access_token_key);
+    console.log('Twitter Access Token Secret: ' + twitter_user.access_token_secret);
 
-      redirect(res, '/watchlist');
-    }
-  });
+    redirect(res, '/watchlist');
+  }
+});
 });
 
-app.listen(3000);
-var sio = io.listen(app);
-sio.set('log level', 1);
-sio.sockets.on('connection', function (client) {
-  packets.handle(client)
-  client.on('disconnect',function(){
-    console.log('dropped')
-  });
+// error handling middleware should be loaded after the loading the routes
+if (process.env.NODE_ENV == 'development')  {
+  app.use(require('errorhandler')({ dumpExceptions: true, showStack: true }));
+}
+else {
+  app.use(require('errorhandler')());
+}
+
+/* Socket functionality  */
+var http = require('http').Server(app);
+var io = require('socket.io').listen(http);
+
+
+http.listen(3000, function() {
+    console.log("Express server listening on port %d in %s mode",3000,app.settings.env);
+
 });
-console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+
+
+//When a client connects
+io.on('connection', function(socket){
+    console.log('a user connected to watchlist');
+
+    packets.handle(socket)
+    socket.on('disconnect',function(){
+      console.log('dropped')
+    });
+
+    });
+
+
 
 // fix broken redirect function in express
 function redirect(res, url) {

@@ -9,8 +9,9 @@ function init() {
   socket.emit('index-poll');
 
   quote_interval = setInterval(function() {
+    socket.emit('watchlist-stream');
     socket.emit('watchlist-poll');
-  }, 1200);
+  }, 5200);
   index_interval = setInterval(function() {
     socket.emit('index-poll');
   }, 6500);
@@ -226,28 +227,28 @@ function remove_symbol_from_watchlist(symbol) {
 }
 
 function update_symbol(quote) {
-  var style = quote.quote.pctchange < 0 ? 'down' : 'up';
+  var style = quote.pchg < 0 ? 'down' : 'up';
 
-  $symbol = $('.quote[symbol="' + quote.instrument.sym + '"]');
+  $symbol = $('.quote[symbol="' + quote.symbol + '"]');
   if($symbol.length<=0) return false;
-  $symbol[0].className = 'quote ' + (quote.quote.pctchange < 0 ? 'down' : 'up');
-  $symbol.find('h5').html(quote.instrument.desc);
-  $symbol.find('.p1 .right:first').html(quote.quote.lastprice).removeClass('up').removeClass('down').addClass(style);
-  $symbol.find('.p1 .right:last').html(Math.round(quote.quote.change * 1000) / 1000 + ' (' + quote.quote.pctchange + '%)').removeClass('up').removeClass('down').addClass(style);
-  $symbol.find('.p2 .right:first').html(quote.quote.bidprice + 'x' + quote.quote.extendedquote.bidsize);
-  $symbol.find('.p2 .right:last').html(quote.quote.askprice + 'x' + quote.quote.extendedquote.asksize);
-  $symbol.find('.p3:first .right:first').html(quote.quote.extendedquote.openprice);
-  $symbol.find('.p3:first .right:last').html(quote.quote.extendedquote.prevclose);
-  $symbol.find('.p3:last .right:first').html(quote.quote.extendedquote.highprice);
-  $symbol.find('.p3:last .right:last').html(quote.quote.extendedquote.lowprice);
-  $symbol.find('.p4 .right:first').html(quote.quote.extendedquote.high52price);
-  $symbol.find('.p4 .right:last').html(quote.quote.extendedquote.low52price);
+  $symbol[0].className = 'quote ' + (quote.pcchg < 0 ? 'down' : 'up');
+  $symbol.find('h5').html(quote.name);
+  $symbol.find('.p1 .right:first').html(quote.last).removeClass('up').removeClass('down').addClass(style);
+  $symbol.find('.p1 .right:last').html(Math.round(quote.chg * 1000) / 1000 + ' (' + quote.pchg + '%)').removeClass('up').removeClass('down').addClass(style);
+  $symbol.find('.p2 .right:first').html(quote.bid + 'x' + quote.bidsz);
+  $symbol.find('.p2 .right:last').html(quote.ask + 'x' + quote.asksz);
+  $symbol.find('.p3:first .right:first').html(quote.opn);
+  $symbol.find('.p3:first .right:last').html(quote.cl);
+  $symbol.find('.p3:last .right:first').html(quote.hi);
+  $symbol.find('.p3:last .right:last').html(quote.lo);
+  $symbol.find('.p4 .right:first').html(quote.wk52hi);
+  $symbol.find('.p4 .right:last').html(quote.wk52lo);
 }
 
 function update_indices(data) {
   for(var quote in data) {
-    symbol = data[quote].instrument.sym;
-    $('#' + symbol + ' span.value').html(number_formatting(data[quote].quote.lastprice));
+    symbol = data[quote].symbol;
+    $('#' + symbol + ' span.value').html(number_formatting(data[quote].last));
   }
 }
 

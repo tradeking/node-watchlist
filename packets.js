@@ -1,14 +1,17 @@
 packets = {
   handle:function(client) {
+    var symbols = new Array();
     client.on('watchlist-stream',function() {
       tradeking_consumer.get(tradeking.api_url+'/watchlists/DEFAULT.json', tradeking.access_token, tradeking.access_secret, function(error, data, response) {
         watchlist = JSON.parse(data)
         console.log('send client their watchlist')
         client.emit('watchlist-symbols', watchlist.response)
         var track = new Array();
+        symbols = new Array();
 
         watchlist.response.watchlists.watchlist.watchlistitem.forEach(function(item) {
           track.push("$" + item.instrument.sym);
+          symbols.push(item.instrument.sym);
         });
 
         twitter_client.stream('statuses/filter', {track:track.join(',')}, function(stream) {
@@ -24,12 +27,12 @@ packets = {
     });
 
     client.on('watchlist-poll', function() {
-      tradeking_consumer.get(tradeking.api_url+'/market/quotes.json?watchlist=DEFAULT&delayed=false', tradeking.access_token, tradeking.access_secret, function(error, data, response) {
+      tradeking_consumer.get(tradeking.api_url +'/market/ext/quotes.json?symbols=AAPL,SPY,' + symbols.toString(), tradeking.access_token, tradeking.access_secret, function(error, data, response) {
         quotes = JSON.parse(data);
-        console.log('send client their new quotes');
-        console.log(quotes)
+        console.log('send client their watchlists quotes');
+        console.log(quotes.response.quotes);
         if(quotes.response.type != "Error") {
-          client.emit('watchlist-quotes', quotes.response.quotes.instrumentquote);
+          client.emit('watchlist-quotes', quotes.response.quotes.quote);
         }
       });
     });
@@ -53,12 +56,13 @@ packets = {
     });
 
     client.on('index-poll', function() {
-      tradeking_consumer.get(tradeking.api_url+'/market/quotes.json?symbols=DJI,SPX,VIX,COMP,RUT,TNX', tradeking.access_token, tradeking.access_secret, function(error, data, response) {
+      tradeking_consumer.get(tradeking.api_url+'/market/ext/quotes.json?symbols=DJI,SPX,VIX,COMP,RUT,TNX', tradeking.access_token, tradeking.access_secret, function(error, data, response) {
         quotes = JSON.parse(data);
-        console.log('send client their new quotes');
+        console.log('send client their index quotes');
         console.log(quotes)
         if(quotes.response.type != "Error") {
-          client.emit('index-symbols', quotes.response.quotes.instrumentquote);
+          client.emit('index-symbols', quotes.response.quotes.quote);
+          console.log(quotes.response.quotes.quote);
         }
       });
     });
